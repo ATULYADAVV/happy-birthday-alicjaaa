@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Alicja</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    overflow:hidden;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:linear-gradient(135deg,#ff8fcf,#ffc8e8,#ffe2f6);
+    position:relative;
+}
+
+.container{
+    width:90%;
+    max-width:500px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    border-radius:25px;
+    padding:30px 20px;
+    color:white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    z-index:2;
+}
+
+h1{
+    font-size:2.5rem;
+    margin-bottom:15px;
+}
+
+p{
+    font-size:1rem;
+    line-height:1.8;
+}
+
+.highlight{
+    color:#fff59d;
+    font-weight:bold;
+}
+
+button{
+    margin-top:25px;
+    padding:14px 28px;
+    border:none;
+    border-radius:50px;
+    background:white;
+    color:#ff4fa3;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+.popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:20;
+}
+
+.popup img{
+    width:85%;
+    max-width:340px;
+    border-radius:25px;
+    border:5px solid white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    animation:pop 0.7s ease;
+}
+
+.popup h2{
+    margin-top:18px;
+    color:white;
+    font-size:2rem;
+}
+
+@keyframes pop{
+
+    0%{
+        transform:scale(0.4);
+        opacity:0;
+    }
+
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+.balloon{
+    position:absolute;
+    bottom:-100px;
+    font-size:45px;
+    animation:floatUp linear forwards;
+}
+
+@keyframes floatUp{
+
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(-130vh);
+    }
+
+}
+
+canvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+@media(max-width:600px){
+
+    h1{
+        font-size:2rem;
+    }
+
+    p{
+        font-size:0.95rem;
+    }
+
+    .popup h2{
+        font-size:1.5rem;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container">
+
+    <h1>Happy Birthday Alicja</h1>
+
+    <p>
+        Happy Birthday <span class="highlight">Kochanie</span>.<br><br>
+
+        May God blast you haha.<br>
+        Tell me how it feels to finally be same age as me.<br><br>
+
+        My favorite little <span class="highlight">Tomato</span> and cutest <span class="highlight">Misiu</span> from Poland.<br><br>
+
+        Hope your day is full of smiles and happiness.
+    </p>
+
+    <button onclick="showBirthday()">
+        Celebrate
+    </button>
+
+</div>
+
+<div class="popup" id="popup">
+
+    <!-- YOUR IMAGE -->
+    <img src="alicj.jpg.jpg" alt="Alicja">
+
+    <h2>Happy Birthday Misiu</h2>
+
+</div>
+
+<!-- YOUR AUDIO -->
+<audio id="birthdaySong">
+    <source src="birthday-song.mp3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const confetti = [];
+
+for(let i=0;i<200;i++){
+
+    confetti.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height-canvas.height,
+        size:Math.random()*8+4,
+        speed:Math.random()*3+2,
+        color:`hsl(${Math.random()*360},100%,70%)`
+    });
+
+}
+
+function drawConfetti(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    confetti.forEach(c=>{
+
+        ctx.fillStyle = c.color;
+
+        ctx.fillRect(c.x,c.y,c.size,c.size);
+
+        c.y += c.speed;
+
+        if(c.y > canvas.height){
+
+            c.y = -10;
+            c.x = Math.random()*canvas.width;
+
+        }
+
+    });
+
+    requestAnimationFrame(drawConfetti);
+
+}
+
+drawConfetti();
+
+function showBirthday(){
+
+    // SHOW POPUP
+    document.getElementById("popup").style.display = "flex";
+
+    // PLAY MUSIC
+    const song = document.getElementById("birthdaySong");
+
+    song.play().catch(error=>{
+        console.log("Audio blocked until user interaction");
+    });
+
+    // BALLOONS
+    for(let i=0;i<50;i++){
+
+        const balloon = document.createElement("div");
+
+        balloon.classList.add("balloon");
+
+        balloon.innerHTML = "🎈";
+
+        balloon.style.left = Math.random()*100 + "vw";
+
+        balloon.style.animationDuration = (Math.random()*4 + 5) + "s";
+
+        document.body.appendChild(balloon);
+
+        setTimeout(()=>{
+            balloon.remove();
+        },9000);
+
+    }
+
+}
+
+window.addEventListener("resize",()=>{
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+});
+
+</script>
+
+</body>
+</html>
